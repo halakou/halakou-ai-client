@@ -1,0 +1,6 @@
+{
+  "name": "halakou",
+  "description": "Transparent, Open-Source BYOK AI Chat Client with native key security, dynamic LLM gateways, and agentic tools.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- Glowing Outer Shield/Hex Prism (centered at 54, 54 within 66dp bounds 21..87) -->
+    <path
+        android:pathData="M54,23 L79,35 L79,62 L54,84 L29,62 L29,35 Z"
+        android:strokeWidth="3.5"
+        android:strokeLineJoin="round"
+        android:strokeLineCap="round">
+        <aapt:attr name="android:strokeColor">
+            <gradient
+                android:startX="29"
+                android:startY="23"
+                android:endX="79"
+                android:endY="84"
+                android:type="linear">
+                <item android:color="#38BDF8" android:offset="0.0" />
+                <item android:color="#818CF8" android:offset="0.5" />
+                <item android:color="#C084FC" android:offset="1.0" />
+            </gradient>
+        </aapt:attr>
+        <aapt:attr name="android:fillColor">
+            <gradient
+                android:startX="54"
+                android:startY="23"
+                android:endX="54"
+                android:endY="84"
+                android:type="linear">
+                <item android:color="#1A38BDF8" android:offset="0.0" />
+                <item android:color="#101E293B" android:offset="1.0" />
+            </gradient>
+        </aapt:attr>
+    </path>
+    <!-- Inner Core Cipher Node / Keyhole AI Shape -->
+    <!-- Top circle head -->
+    <path
+        android:pathData="M54,39m-8.5,0a8.5,8.5 0 1,1 17,0a8.5,8.5 0 1,1 -17,0"
+        android:strokeWidth="3"
+        android:strokeColor="#FFFFFF">
+        <aapt:attr name="android:fillColor">
+            <gradient
+                android:startX="45"
+                android:startY="30"
+                android:endX="63"
+                android:endY="48"
+                android:type="linear">
+                <item android:color="#0EA5E9" android:offset="0.0" />
+                <item android:color="#6366F1" android:offset="1.0" />
+            </gradient>
+        </aapt:attr>
+    </path>
+    <!-- Center Key Stem / Dynamic Spark -->
+    <path
+        android:pathData="M51.5,46 L56.5,46 L58.5,65 L54,70 L49.5,65 Z"
+        android:fillColor="#F8FAFC"
+        android:strokeWidth="1.5"
+        android:strokeColor="#38BDF8" />
+    <!-- Cross notches for Key mechanism -->
+    <path
+        android:pathData="M54,55 L61,55 M54,61 L59,61"
+        android:strokeWidth="2.5"
+        android:strokeColor="#38BDF8"
+        android:strokeLineCap="round" />
+    <!-- Modern Agentic Node Star Sparkles -->
+    <path
+        android:pathData="M69,32 L70.5,35.5 L74,37 L70.5,38.5 L69,42 L67.5,38.5 L64,37 L67.5,35.5 Z"
+        android:fillColor="#38BDF8" />
+    <path
+        android:pathData="M39,63 L40,65.5 L42.5,66.5 L40,67.5 L39,70 L38,67.5 L35.5,66.5 L38,65.5 Z"
+        android:fillColor="#C084FC" />
+</vector>

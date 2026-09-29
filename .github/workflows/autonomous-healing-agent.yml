@@ -1,0 +1,29 @@
+name: Autonomous Endpoint Healing Agent
+
+on:
+  schedule:
+    # Runs every 6 hours automatically (zero human intervention)
+    - cron: '0 */6 * * *'
+  workflow_dispatch:
+
+jobs:
+  heal-and-update-kv:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Run Autonomous Endpoint Discovery & Benchmarking
+        env:
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          CLOUDFLARE_KV_NAMESPACE_ID: ${{ secrets.CLOUDFLARE_KV_NAMESPACE_ID }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          ATRIA_API_KEY: ${{ secrets.ATRIA_API_KEY }}
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+        run: |
+          node backend/agent/autonomous_agent.js

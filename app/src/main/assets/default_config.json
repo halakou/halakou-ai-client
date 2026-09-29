@@ -1,0 +1,79 @@
+{
+  "version": "2.0.0",
+  "timestamp": 1759140000,
+  "generated_at": "2026-09-29T05:00:00Z",
+  "circuit_breaker": {
+    "failure_threshold": 1,
+    "cooldown_duration_ms": 60000,
+    "tripping_http_codes": [403, 429, 502, 503, 504]
+  },
+  "monetization": {
+    "sku_id": "halakou.monthly.1usd",
+    "price_usd": "1.00",
+    "free_daily_limit": 25
+  },
+  "text_models": [
+    {
+      "id": "atria-dawn-primary",
+      "provider": "atria",
+      "name": "Atria Dawn (MoE 744B)",
+      "model": "Atria-Dawn-Preview",
+      "base_url": "https://api.atria-asi.ai/v1",
+      "is_vision": false,
+      "is_primary_text": true,
+      "priority": 1,
+      "latency_ms": 110,
+      "is_healthy": true
+    },
+    {
+      "id": "llama-3-3-70b-free",
+      "provider": "openrouter",
+      "name": "Llama 3.3 70B Instruct (Free)",
+      "model": "meta-llama/llama-3.3-70b-instruct:free",
+      "base_url": "https://openrouter.ai/api/v1",
+      "is_vision": false,
+      "is_primary_text": false,
+      "priority": 2,
+      "latency_ms": 135,
+      "is_healthy": true
+    },
+    {
+      "id": "deepseek-r1-free",
+      "provider": "openrouter",
+      "name": "DeepSeek R1 Reasoning (Free)",
+      "model": "deepseek/deepseek-r1:free",
+      "base_url": "https://openrouter.ai/api/v1",
+      "is_vision": false,
+      "is_primary_text": false,
+      "priority": 3,
+      "latency_ms": 180,
+      "is_healthy": true
+    }
+  ],
+  "vision_models": [
+    {
+      "id": "gemini-2-flash-vision-free",
+      "provider": "openrouter",
+      "name": "Gemini 2.0 Flash Vision (Free)",
+      "model": "google/gemini-2.0-flash-exp:free",
+      "base_url": "https://openrouter.ai/api/v1",
+      "is_vision": true,
+      "is_primary_text": false,
+      "priority": 1,
+      "latency_ms": 95,
+      "is_healthy": true
+    },
+    {
+      "id": "llama-3-2-vision-free",
+      "provider": "openrouter",
+      "name": "Llama 3.2 11B Vision (Free)",
+      "model": "meta-llama/llama-3.2-11b-vision-instruct:free",
+      "base_url": "https://openrouter.ai/api/v1",
+      "is_vision": true,
+      "is_primary_text": false,
+      "priority": 2,
+      "latency_ms": 140,
+      "is_healthy": true
+    }
+  ]
+}

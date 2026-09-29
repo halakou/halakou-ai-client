@@ -1,0 +1,56 @@
+name: Update AI Endpoints & Publish to GitHub Pages
+
+on:
+  schedule:
+    # Runs daily at 04:00 UTC
+    - cron: '0 4 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: 'pages'
+  cancel-in-progress: true
+
+jobs:
+  update-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Probe Endpoints & Generate config.json
+        env:
+          ATRIA_API_KEY: ${{ secrets.ATRIA_API_KEY }}
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: |
+          python3 scripts/update_endpoints.py
+
+      - name: Commit Updated Config to Main
+        run: |
+          git config --local user.email "halakou-bot@users.noreply.github.com"
+          git config --local user.name "halakou-autonomous-agent"
+          git add config.json app/src/main/assets/default_config.json || true
+          git diff-index --quiet HEAD || git commit -m "chore(auto): daily update healthy endpoints [skip ci]"
+          git push origin HEAD || echo "No changes to push"
+
+      - name: Setup GitHub Pages
+        uses: actions/configure-pages@v4
+
+      - name: Upload Artifact for GitHub Pages
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: '.'
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
