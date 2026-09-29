@@ -1,11 +1,17 @@
 {
   "version": "2.0.0",
-  "timestamp": 1759140000,
-  "generated_at": "2026-09-29T05:00:00Z",
+  "timestamp": 1790693160,
+  "generated_at": "2026-09-29T14:46:00Z",
   "circuit_breaker": {
     "failure_threshold": 1,
     "cooldown_duration_ms": 60000,
-    "tripping_http_codes": [403, 429, 502, 503, 504]
+    "tripping_http_codes": [
+      403,
+      429,
+      502,
+      503,
+      504
+    ]
   },
   "monetization": {
     "sku_id": "halakou.monthly.1usd",
@@ -22,19 +28,7 @@
       "is_vision": false,
       "is_primary_text": true,
       "priority": 1,
-      "latency_ms": 110,
-      "is_healthy": true
-    },
-    {
-      "id": "llama-3-3-70b-free",
-      "provider": "openrouter",
-      "name": "Llama 3.3 70B Instruct (Free)",
-      "model": "meta-llama/llama-3.3-70b-instruct:free",
-      "base_url": "https://openrouter.ai/api/v1",
-      "is_vision": false,
-      "is_primary_text": false,
-      "priority": 2,
-      "latency_ms": 135,
+      "latency_ms": 1062,
       "is_healthy": true
     },
     {
@@ -45,9 +39,21 @@
       "base_url": "https://openrouter.ai/api/v1",
       "is_vision": false,
       "is_primary_text": false,
-      "priority": 3,
-      "latency_ms": 180,
-      "is_healthy": true
+      "priority": 5,
+      "latency_ms": 48,
+      "is_healthy": false
+    },
+    {
+      "id": "llama-3-3-70b-free",
+      "provider": "openrouter",
+      "name": "Llama 3.3 70B Instruct (Free)",
+      "model": "meta-llama/llama-3.3-70b-instruct:free",
+      "base_url": "https://openrouter.ai/api/v1",
+      "is_vision": false,
+      "is_primary_text": false,
+      "priority": 4,
+      "latency_ms": 65,
+      "is_healthy": false
     }
   ],
   "vision_models": [
@@ -59,9 +65,9 @@
       "base_url": "https://openrouter.ai/api/v1",
       "is_vision": true,
       "is_primary_text": false,
-      "priority": 1,
-      "latency_ms": 95,
-      "is_healthy": true
+      "priority": 2,
+      "latency_ms": 52,
+      "is_healthy": false
     },
     {
       "id": "llama-3-2-vision-free",
@@ -71,9 +77,21 @@
       "base_url": "https://openrouter.ai/api/v1",
       "is_vision": true,
       "is_primary_text": false,
-      "priority": 2,
-      "latency_ms": 140,
-      "is_healthy": true
+      "priority": 3,
+      "latency_ms": 66,
+      "is_healthy": false
+    },
+    {
+      "id": "gemini-direct-public",
+      "provider": "gemini",
+      "name": "Google Gemini 2.5 Flash Direct",
+      "model": "gemini-2.5-flash",
+      "base_url": "https://generativelanguage.googleapis.com",
+      "is_vision": true,
+      "is_primary_text": false,
+      "priority": 6,
+      "latency_ms": 77,
+      "is_healthy": false
     }
   ]
 }
