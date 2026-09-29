@@ -42,6 +42,17 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      # The repo's debug build type signs with a custom debugConfig keystore
+      # that is gitignored (see .gitignore). Recreate it so the Gradle build
+      # (and CodeQL autobuild) can run on a fresh CI checkout.
+      - name: Generate debug keystore
+        run: |
+          keytool -genkey -v -keystore debug.keystore \
+            -alias androiddebugkey \
+            -dname "CN=Android Debug,O=Android,C=US" \
+            -storepass android -keypass android \
+            -keyalg RSA -keysize 2048 -validity 10000
+
       # Initializes the CodeQL tools for scanning.
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v3
