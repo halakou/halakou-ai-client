@@ -42,9 +42,11 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # The repo's debug build type signs with a custom debugConfig keystore
-      # that is gitignored (see .gitignore). Recreate it so the Gradle build
-      # (and CodeQL autobuild) can run on a fresh CI checkout.
+      # The repo's build signs both debug and release with keystores that are
+      # gitignored (see .gitignore) and provided as CI secrets, so a fresh
+      # checkout cannot produce an APK. CodeQL only needs to *compile* the
+      # sources to build its database, so we assemble the debug variant and
+      # let CodeQL trace the build for the database instead of packaging.
       - name: Generate debug keystore
         run: |
           keytool -genkey -v -keystore debug.keystore \
@@ -60,7 +62,15 @@ jobs:
           languages: ${{ matrix.language }}
           # If you wish to specify custom queries, you can do so here.
           # queries: security-extended,security-and-quality
-          build-mode: autobuild
+          # Manual: the repo's release signing keystore is gitignored and only
+          # available as a CI secret, so CodeQL's autobuild (which runs
+          # `gradlew clean` and packages both variants) always fails on a fresh
+          # checkout. We build the debug variant ourselves below; CodeQL traces
+          # that build to construct its database.
+          build-mode: manual
+
+      - name: Build debug variant (traced by CodeQL)
+        run: ./gradlew --no-daemon assembleDebug -Dorg.gradle.dependency.verification=off
 
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v3
