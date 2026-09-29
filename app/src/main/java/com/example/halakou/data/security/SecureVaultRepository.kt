@@ -15,16 +15,16 @@ class SecureVaultRepository(context: Context) {
     private val prefs: SharedPreferences =
         context.getSharedPreferences("halakou_secure_vault_prefs", Context.MODE_PRIVATE)
 
+    private val encryptedPrefs = EncryptedPreferencesManager(context)
     private val keyStoreManager = KeyStoreManager()
 
-    fun isHardwareBacked(): Boolean = keyStoreManager.isHardwareBacked()
+    fun isHardwareBacked(): Boolean = encryptedPrefs.isHardwareEncrypted() || keyStoreManager.isHardwareBacked()
 
     /**
-     * Store an API key securely encrypted.
+     * Store an API key securely encrypted at rest via EncryptedSharedPreferences.
      */
     fun saveApiKey(provider: LlmProvider, rawKey: String) {
-        val encrypted = keyStoreManager.encrypt(rawKey.trim())
-        prefs.edit().putString("key_${provider.id}", encrypted).apply()
+        encryptedPrefs.saveApiKey(provider, rawKey)
     }
 
     /**
@@ -32,12 +32,8 @@ class SecureVaultRepository(context: Context) {
      * For Gemini, if user hasn't set one, check BuildConfig.GEMINI_API_KEY as fallback.
      */
     fun getApiKey(provider: LlmProvider): String {
-        val encrypted = prefs.getString("key_${provider.id}", null)
-        val decrypted = if (!encrypted.isNullOrBlank()) {
-            keyStoreManager.decrypt(encrypted)
-        } else ""
-
-        if (decrypted.isNotBlank()) return decrypted
+        val storedKey = encryptedPrefs.getApiKey(provider)
+        if (!storedKey.isNullOrBlank()) return storedKey
 
         // Check if environment / BuildConfig has a pre-injected key
         if (provider == LlmProvider.GEMINI) {
@@ -55,7 +51,7 @@ class SecureVaultRepository(context: Context) {
     }
 
     fun removeApiKey(provider: LlmProvider) {
-        prefs.edit().remove("key_${provider.id}").apply()
+        encryptedPrefs.removeApiKey(provider)
     }
 
     /**

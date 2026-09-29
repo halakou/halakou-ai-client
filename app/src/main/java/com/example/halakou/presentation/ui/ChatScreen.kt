@@ -55,6 +55,7 @@ import androidx.compose.material.icons.filled.Key
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Psychology
 import androidx.compose.material.icons.filled.RemoveRedEye
+import androidx.compose.material.icons.filled.Speed
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
@@ -80,6 +81,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -92,6 +94,8 @@ import com.example.halakou.presentation.mvi.ChatIntent
 import com.example.halakou.presentation.mvi.ChatSideEffect
 import com.example.halakou.presentation.mvi.ChatUiState
 import com.example.halakou.presentation.mvi.ChatViewModel
+import com.example.halakou.presentation.util.HapticFeedbackHelper
+import com.example.halakou.presentation.util.HapticInteraction
 import com.example.ui.theme.AccentAmber
 import com.example.ui.theme.AccentCyan
 import com.example.ui.theme.AccentEmerald
@@ -121,6 +125,7 @@ fun MainChatScreen(
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
+    val view = LocalView.current
     val haptic = LocalHapticFeedback.current
     val listState = rememberLazyListState()
 
@@ -136,7 +141,7 @@ fun MainChatScreen(
                     }
                 }
                 is ChatSideEffect.TriggerHaptic -> {
-                    haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
+                    HapticFeedbackHelper.performHaptic(view, haptic, effect.interaction)
                 }
             }
         }
@@ -188,6 +193,7 @@ fun MainChatScreen(
                         selectedModel = state.selectedModel,
                         onOpenRadar = { viewModel.onIntent(ChatIntent.SetFreeModelsRadarOpen(true)) },
                         onPromptClick = { prompt ->
+                            HapticFeedbackHelper.performHaptic(view, haptic, HapticInteraction.SEND_MESSAGE)
                             viewModel.onIntent(ChatIntent.UpdateInputText(prompt))
                             viewModel.onIntent(ChatIntent.SendMessage)
                         }
@@ -264,6 +270,15 @@ fun MainChatScreen(
                         state = state,
                         viewModel = viewModel,
                         onDismiss = { viewModel.onIntent(ChatIntent.SetFreeModelsRadarOpen(false)) }
+                    )
+                }
+
+                // Gateway Latency Radar Sheet
+                if (state.isLatencyMonitorOpen) {
+                    GatewayLatencySheet(
+                        state = state,
+                        viewModel = viewModel,
+                        onDismiss = { viewModel.onIntent(ChatIntent.SetLatencyMonitorOpen(false)) }
                     )
                 }
 
@@ -401,8 +416,23 @@ fun ChatTopBar(
                 }
             }
 
-            // Action Buttons (Free Models Radar + Key Vault)
+            // Action Buttons (Latency Radar + Free Models Radar + Key Vault)
             Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                IconButton(
+                    onClick = { viewModel.onIntent(ChatIntent.SetLatencyMonitorOpen(true)) },
+                    modifier = Modifier
+                        .size(38.dp)
+                        .clip(RoundedCornerShape(10.dp))
+                        .background(DarkSurfaceElevated)
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Speed,
+                        contentDescription = "Gateway Latency Radar",
+                        tint = AccentAmber,
+                        modifier = Modifier.size(19.dp)
+                    )
+                }
+
                 IconButton(
                     onClick = { viewModel.onIntent(ChatIntent.SetFreeModelsRadarOpen(true)) },
                     modifier = Modifier
@@ -526,6 +556,13 @@ fun CircuitBreakerFallbackBanner(
     onDismiss: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val view = LocalView.current
+    val haptic = LocalHapticFeedback.current
+
+    LaunchedEffect(event) {
+        HapticFeedbackHelper.performHaptic(view, haptic, HapticInteraction.CIRCUIT_BREAKER_FALLBACK)
+    }
+
     Box(
         modifier = modifier
             .fillMaxWidth()
@@ -570,7 +607,13 @@ fun CircuitBreakerFallbackBanner(
                 }
             }
 
-            IconButton(onClick = onDismiss, modifier = Modifier.size(24.dp)) {
+            IconButton(
+                onClick = {
+                    HapticFeedbackHelper.performHaptic(view, haptic, HapticInteraction.STANDARD_CLICK)
+                    onDismiss()
+                },
+                modifier = Modifier.size(24.dp)
+            ) {
                 Icon(imageVector = Icons.Default.Close, contentDescription = "Dismiss", tint = TextSecondary)
             }
         }
@@ -850,13 +893,14 @@ fun ChatComposerBar(
     viewModel: ChatViewModel,
     modifier: Modifier = Modifier
 ) {
+    val view = LocalView.current
     val haptic = LocalHapticFeedback.current
 
     val photoPickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.PickVisualMedia()
     ) { uri ->
         if (uri != null) {
-            haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
+            HapticFeedbackHelper.performHaptic(view, haptic, HapticInteraction.STANDARD_CLICK)
             viewModel.onIntent(ChatIntent.AttachImage(uri.toString()))
         }
     }
@@ -906,7 +950,7 @@ fun ChatComposerBar(
                             modifier = Modifier
                                 .size(14.dp)
                                 .clickable {
-                                    haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
+                                    HapticFeedbackHelper.performHaptic(view, haptic, HapticInteraction.STANDARD_CLICK)
                                     viewModel.onIntent(ChatIntent.RemoveAttachedImage)
                                 }
                         )
@@ -927,7 +971,7 @@ fun ChatComposerBar(
                         .clip(RoundedCornerShape(12.dp))
                         .background(if (state.isToolsEnabled) AccentCyan.copy(alpha = 0.15f) else DarkSurfaceElevated)
                         .clickable {
-                            haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
+                            HapticFeedbackHelper.performHaptic(view, haptic, HapticInteraction.STANDARD_CLICK)
                             viewModel.onIntent(ChatIntent.ToggleToolsGlobal(!state.isToolsEnabled))
                         }
                         .padding(horizontal = 8.dp, vertical = 4.dp),
@@ -1019,7 +1063,7 @@ fun ChatComposerBar(
 
             IconButton(
                 onClick = {
-                    haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
+                    HapticFeedbackHelper.performHaptic(view, haptic, HapticInteraction.SEND_MESSAGE)
                     viewModel.onIntent(ChatIntent.SendMessage)
                 },
                 enabled = (state.inputText.isNotBlank() || state.attachedImageUri != null) && !state.isGenerating,

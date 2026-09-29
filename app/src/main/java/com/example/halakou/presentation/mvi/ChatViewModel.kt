@@ -22,10 +22,12 @@ import com.example.halakou.domain.model.ModelSettings
 import com.example.halakou.domain.model.ToolExecution
 import com.example.halakou.domain.orchestrator.AutonomousAggregator
 import com.example.halakou.domain.orchestrator.CircuitBreaker
+import com.example.halakou.domain.orchestrator.LatencyMonitor
 import com.example.halakou.domain.orchestrator.ModelOrchestrator
 import com.example.halakou.domain.orchestrator.OrchestratedEndpoint
 import com.example.halakou.domain.orchestrator.TaskRouter
 import com.example.halakou.domain.tools.ToolRegistry
+import com.example.halakou.presentation.util.HapticInteraction
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -48,13 +50,15 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
     // Autonomous AI Orchestration Engines
     val circuitBreaker = CircuitBreaker()
     val autonomousAggregator = AutonomousAggregator()
+    val latencyMonitor = LatencyMonitor()
     val taskRouter = TaskRouter(autonomousAggregator, circuitBreaker)
     val orchestrator = ModelOrchestrator(
         autonomousAggregator,
         circuitBreaker,
         taskRouter,
         llmGateway,
-        vaultRepo
+        vaultRepo,
+        latencyMonitor
     )
 
     // Security & Commercial Monetization
@@ -94,11 +98,31 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
             )
         }
 
+        // Initialize Latency Monitor with endpoints
+        latencyMonitor.initializeEndpoints(
+            endpoints = autonomousAggregator.getAllEndpoints(),
+            activeEndpointKey = "atria-dawn-primary"
+        )
+
         observeSessions()
         scanFreeModelsInternal()
         observeFallbackEvents()
         observeBillingState()
+        observeLatencyMonitor()
         fetchRemoteEndpointsInBackground()
+    }
+
+    private fun observeLatencyMonitor() {
+        viewModelScope.launch {
+            latencyMonitor.rankedGateways.collect { ranked ->
+                _uiState.update { it.copy(rankedGateways = ranked) }
+            }
+        }
+        viewModelScope.launch {
+            latencyMonitor.isBenchmarking.collect { benchmarking ->
+                _uiState.update { it.copy(isBenchmarkingLatency = benchmarking) }
+            }
+        }
     }
 
     private fun fetchRemoteEndpointsInBackground() {
@@ -107,6 +131,10 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
             val refreshed = configRepo.refreshRemoteConfig(customUrl)
             if (refreshed) {
                 autonomousAggregator.syncFromRemoteConfig(configRepo.configState.value)
+                latencyMonitor.initializeEndpoints(
+                    autonomousAggregator.getAllEndpoints(),
+                    "${_uiState.value.selectedProvider.id}-${_uiState.value.selectedModel}"
+                )
             }
         }
     }
@@ -133,6 +161,7 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
                         "Circuit Breaker: Auto-routed from ${fallback.fromModel} to ${fallback.toModel}"
                     )
                 )
+                _sideEffect.send(ChatSideEffect.TriggerHaptic(HapticInteraction.CIRCUIT_BREAKER_FALLBACK))
             }
         }
     }
@@ -289,6 +318,9 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
             is ChatIntent.SetFreeModelsRadarOpen -> {
                 _uiState.update { it.copy(isFreeModelsRadarOpen = intent.isOpen) }
             }
+            is ChatIntent.SetLatencyMonitorOpen -> {
+                _uiState.update { it.copy(isLatencyMonitorOpen = intent.isOpen) }
+            }
             is ChatIntent.SetAdminPanelOpen -> {
                 _uiState.update { it.copy(isAdminPanelOpen = intent.isOpen) }
             }
@@ -297,6 +329,13 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
             }
             is ChatIntent.ScanFreeModels -> {
                 scanFreeModelsInternal()
+            }
+            is ChatIntent.BenchmarkGateways -> {
+                viewModelScope.launch {
+                    val activeKey = "${_uiState.value.selectedProvider.id}-${_uiState.value.selectedModel}"
+                    latencyMonitor.benchmarkAll(autonomousAggregator.getAllEndpoints(), activeKey)
+                    _sideEffect.send(ChatSideEffect.ShowToast("⚡ Gateway Benchmark Complete"))
+                }
             }
             is ChatIntent.AutoSetFreeModel -> {
                 autoConfigureFreePreset(intent.category)
@@ -313,6 +352,26 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
                 }
                 viewModelScope.launch {
                     _sideEffect.send(ChatSideEffect.ShowToast("Selected Free Model: ${model.name}"))
+                }
+            }
+            is ChatIntent.SelectRankedGateway -> {
+                val stats = intent.gateway.stats
+                val newProvider = stats.provider
+                val settings = vaultRepo.getModelSettings(newProvider)
+                _uiState.update {
+                    it.copy(
+                        selectedProvider = newProvider,
+                        selectedModel = stats.modelId,
+                        modelSettings = settings,
+                        isLatencyMonitorOpen = false,
+                        isKeyMissing = !vaultRepo.hasApiKey(newProvider)
+                    )
+                }
+                latencyMonitor.recalculateRankings(stats.endpointKey)
+                viewModelScope.launch {
+                    _sideEffect.send(
+                        ChatSideEffect.ShowToast("⚡ Switched to ${stats.modelId} (${stats.averageLatencyMs}ms)")
+                    )
                 }
             }
         }
@@ -407,7 +466,7 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
         }
 
         viewModelScope.launch {
-            _sideEffect.send(ChatSideEffect.TriggerHaptic)
+            _sideEffect.send(ChatSideEffect.TriggerHaptic(HapticInteraction.SEND_MESSAGE))
             chatRepo.saveMessage(userMessage)
 
             val pastMessages = chatRepo.getMessagesForSessionSync(sessionId)
@@ -483,6 +542,12 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
                     output = "Tool '${toolInvocation.toolName}' is not registered.",
                     isSuccess = false
                 )
+            }
+
+            if (toolResult.isSuccess) {
+                _sideEffect.send(ChatSideEffect.TriggerHaptic(HapticInteraction.TOOL_SUCCESS))
+            } else {
+                _sideEffect.send(ChatSideEffect.TriggerHaptic(HapticInteraction.ERROR_ALERT))
             }
 
             val toolMessageId = UUID.randomUUID().toString()

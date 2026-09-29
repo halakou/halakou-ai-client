@@ -24,7 +24,8 @@ class ModelOrchestrator(
     val circuitBreaker: CircuitBreaker,
     val taskRouter: TaskRouter,
     val llmGateway: LlmGateway,
-    val vaultRepo: SecureVaultRepository
+    val vaultRepo: SecureVaultRepository,
+    val latencyMonitor: LatencyMonitor? = null
 ) {
     private val _fallbackEvents = MutableSharedFlow<FallbackEvent>(extraBufferCapacity = 5)
     val fallbackEvents: SharedFlow<FallbackEvent> = _fallbackEvents.asSharedFlow()
@@ -65,6 +66,7 @@ class ModelOrchestrator(
             val apiKey = vaultRepo.getApiKey(candidate.provider)
             val baseUrl = candidate.baseUrl
 
+            val startCallTime = System.currentTimeMillis()
             val result = llmGateway.generateResponse(
                 provider = candidate.provider,
                 modelId = candidate.modelId,
@@ -74,6 +76,8 @@ class ModelOrchestrator(
                 settings = settings,
                 systemPromptWithTools = systemPromptWithTools
             )
+            val elapsedMs = System.currentTimeMillis() - startCallTime
+            latencyMonitor?.recordObservation(candidate.key, elapsedMs, result.isSuccess)
 
             if (result.isSuccess) {
                 circuitBreaker.recordSuccess(candidate.key)

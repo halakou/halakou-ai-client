@@ -31,6 +31,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -40,11 +41,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.halakou.domain.model.ToolExecution
+import com.example.halakou.presentation.util.HapticFeedbackHelper
+import com.example.halakou.presentation.util.HapticInteraction
 import com.example.ui.theme.AccentAmber
 import com.example.ui.theme.AccentCyan
 import com.example.ui.theme.AccentEmerald
@@ -61,7 +65,14 @@ fun ToolExecutionPill(
     modifier: Modifier = Modifier
 ) {
     var expanded by remember { mutableStateOf(false) }
+    val view = LocalView.current
     val haptic = LocalHapticFeedback.current
+
+    LaunchedEffect(execution.isRunning, execution.isError, execution.result) {
+        if (!execution.isRunning && !execution.isError && !execution.result.isNullOrBlank()) {
+            HapticFeedbackHelper.performHaptic(view, haptic, HapticInteraction.TOOL_SUCCESS)
+        }
+    }
 
     val toolIcon = when (execution.toolName.lowercase()) {
         "web_search" -> Icons.Default.Language
@@ -84,7 +95,7 @@ fun ToolExecutionPill(
             .background(DarkSurfaceElevated.copy(alpha = 0.7f))
             .border(1.dp, CodeBorder, RoundedCornerShape(10.dp))
             .clickable {
-                haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
+                HapticFeedbackHelper.performHaptic(view, haptic, HapticInteraction.STANDARD_CLICK)
                 expanded = !expanded
             }
             .padding(10.dp)

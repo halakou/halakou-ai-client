@@ -9,6 +9,7 @@ import com.example.halakou.domain.model.LlmProvider
 import com.example.halakou.domain.model.ModelSettings
 import com.example.halakou.domain.orchestrator.FallbackEvent
 import com.example.halakou.domain.tools.AgentTool
+import com.example.halakou.presentation.util.HapticInteraction
 
 data class ChatUiState(
     val currentSessionId: String? = null,
@@ -34,11 +35,14 @@ data class ChatUiState(
     val isSettingsOpen: Boolean = false,
     val isModelSwitcherOpen: Boolean = false,
     val isFreeModelsRadarOpen: Boolean = false,
+    val isLatencyMonitorOpen: Boolean = false,
     val isAdminPanelOpen: Boolean = false,
     val isPaywallOpen: Boolean = false,
     val subscriptionStatus: SubscriptionStatus = SubscriptionStatus.FREE_TIER,
     val dailyRequestsUsed: Int = 0,
     val freeModels: List<FreeModelInfo> = emptyList(),
+    val rankedGateways: List<com.example.halakou.domain.orchestrator.RankedGateway> = emptyList(),
+    val isBenchmarkingLatency: Boolean = false,
     val isScanningFreeModels: Boolean = false,
     val exportedMarkdown: String? = null
 )
@@ -67,15 +71,20 @@ sealed interface ChatIntent {
     data class SetSettingsOpen(val isOpen: Boolean) : ChatIntent
     data class SetModelSwitcherOpen(val isOpen: Boolean) : ChatIntent
     data class SetFreeModelsRadarOpen(val isOpen: Boolean) : ChatIntent
+    data class SetLatencyMonitorOpen(val isOpen: Boolean) : ChatIntent
     data class SetAdminPanelOpen(val isOpen: Boolean) : ChatIntent
     data class SetPaywallOpen(val isOpen: Boolean) : ChatIntent
     data object ScanFreeModels : ChatIntent
+    data object BenchmarkGateways : ChatIntent
     data class AutoSetFreeModel(val category: FreeModelCategory) : ChatIntent
     data class SelectFreeModel(val model: FreeModelInfo) : ChatIntent
+    data class SelectRankedGateway(val gateway: com.example.halakou.domain.orchestrator.RankedGateway) : ChatIntent
 }
 
 sealed interface ChatSideEffect {
     data class ShowToast(val message: String) : ChatSideEffect
     data object ScrollToBottom : ChatSideEffect
-    data object TriggerHaptic : ChatSideEffect
+    data class TriggerHaptic(
+        val interaction: HapticInteraction = HapticInteraction.SEND_MESSAGE
+    ) : ChatSideEffect
 }
