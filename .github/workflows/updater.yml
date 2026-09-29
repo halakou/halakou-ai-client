@@ -44,7 +44,7 @@ jobs:
           git push origin HEAD || echo "No changes to push"
 
       - name: Setup GitHub Pages
-        uses: actions/configure-pages@v4
+        uses: actions/configure-pages@v6
 
       - name: Upload Artifact for GitHub Pages
         uses: actions/upload-pages-artifact@v3
