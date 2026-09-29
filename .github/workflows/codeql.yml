@@ -42,11 +42,23 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      # The Android Gradle plugin in this repo requires JDK 17.
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      # This repo ships gradle-wrapper.properties but no gradlew script or
+      # wrapper jar, so setup-gradle provides the `gradle` executable.
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+
       # The repo's build signs both debug and release with keystores that are
-      # gitignored (see .gitignore) and provided as CI secrets, so a fresh
-      # checkout cannot produce an APK. CodeQL only needs to *compile* the
-      # sources to build its database, so we assemble the debug variant and
-      # let CodeQL trace the build for the database instead of packaging.
+      # gitignored (see .gitignore) and only available as CI secrets, so a
+      # fresh checkout cannot package an APK. CodeQL only needs to *compile*
+      # the sources, so we build the debug variant only; CodeQL traces that
+      # build to construct its database.
       - name: Generate debug keystore
         run: |
           keytool -genkey -v -keystore debug.keystore \
@@ -70,7 +82,7 @@ jobs:
           build-mode: manual
 
       - name: Build debug variant (traced by CodeQL)
-        run: ./gradlew --no-daemon assembleDebug -Dorg.gradle.dependency.verification=off
+        run: gradle --no-daemon assembleDebug -Dorg.gradle.dependency.verification=off
 
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v3
