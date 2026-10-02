@@ -1,7 +1,7 @@
 {
   "version": "2.0.0",
-  "timestamp": 1790850602,
-  "generated_at": "2026-10-01T10:30:02Z",
+  "timestamp": 1790935509,
+  "generated_at": "2026-10-02T10:05:09Z",
   "circuit_breaker": {
     "failure_threshold": 1,
     "cooldown_duration_ms": 60000,
@@ -28,20 +28,8 @@
       "is_vision": false,
       "is_primary_text": true,
       "priority": 1,
-      "latency_ms": 934,
+      "latency_ms": 1009,
       "is_healthy": true
-    },
-    {
-      "id": "llama-3-3-70b-free",
-      "provider": "openrouter",
-      "name": "Llama 3.3 70B Instruct (Free)",
-      "model": "meta-llama/llama-3.3-70b-instruct:free",
-      "base_url": "https://openrouter.ai/api/v1",
-      "is_vision": false,
-      "is_primary_text": false,
-      "priority": 4,
-      "latency_ms": 57,
-      "is_healthy": false
     },
     {
       "id": "deepseek-r1-free",
@@ -52,7 +40,19 @@
       "is_vision": false,
       "is_primary_text": false,
       "priority": 5,
-      "latency_ms": 61,
+      "latency_ms": 34,
+      "is_healthy": false
+    },
+    {
+      "id": "llama-3-3-70b-free",
+      "provider": "openrouter",
+      "name": "Llama 3.3 70B Instruct (Free)",
+      "model": "meta-llama/llama-3.3-70b-instruct:free",
+      "base_url": "https://openrouter.ai/api/v1",
+      "is_vision": false,
+      "is_primary_text": false,
+      "priority": 4,
+      "latency_ms": 36,
       "is_healthy": false
     }
   ],
@@ -66,19 +66,7 @@
       "is_vision": true,
       "is_primary_text": false,
       "priority": 3,
-      "latency_ms": 49,
-      "is_healthy": false
-    },
-    {
-      "id": "gemini-direct-public",
-      "provider": "gemini",
-      "name": "Google Gemini 2.5 Flash Direct",
-      "model": "gemini-2.5-flash",
-      "base_url": "https://generativelanguage.googleapis.com",
-      "is_vision": true,
-      "is_primary_text": false,
-      "priority": 6,
-      "latency_ms": 80,
+      "latency_ms": 32,
       "is_healthy": false
     },
     {
@@ -90,7 +78,19 @@
       "is_vision": true,
       "is_primary_text": false,
       "priority": 2,
-      "latency_ms": 98,
+      "latency_ms": 37,
+      "is_healthy": false
+    },
+    {
+      "id": "gemini-direct-public",
+      "provider": "gemini",
+      "name": "Google Gemini 2.5 Flash Direct",
+      "model": "gemini-2.5-flash",
+      "base_url": "https://generativelanguage.googleapis.com",
+      "is_vision": true,
+      "is_primary_text": false,
+      "priority": 6,
+      "latency_ms": 66,
       "is_healthy": false
     }
   ]
