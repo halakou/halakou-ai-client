@@ -44,7 +44,7 @@ jobs:
 
       # The Android Gradle plugin in this repo requires JDK 17.
       - name: Set up JDK 17
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v6
         with:
           distribution: 'temurin'
           java-version: '17'
