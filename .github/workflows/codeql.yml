@@ -52,7 +52,7 @@ jobs:
       # This repo ships gradle-wrapper.properties but no gradlew script or
       # wrapper jar, so setup-gradle provides the `gradle` executable.
       - name: Set up Gradle
-        uses: gradle/actions/setup-gradle@v4
+        uses: gradle/actions/setup-gradle@v6
 
       # The repo's build signs both debug and release with keystores that are
       # gitignored (see .gitignore) and only available as CI secrets, so a
