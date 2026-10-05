@@ -1,7 +1,7 @@
 {
   "version": "2.0.0",
-  "timestamp": 1791108873,
-  "generated_at": "2026-10-04T10:14:33Z",
+  "timestamp": 1791197637,
+  "generated_at": "2026-10-05T10:53:57Z",
   "circuit_breaker": {
     "failure_threshold": 1,
     "cooldown_duration_ms": 60000,
@@ -28,20 +28,8 @@
       "is_vision": false,
       "is_primary_text": true,
       "priority": 1,
-      "latency_ms": 1074,
+      "latency_ms": 1008,
       "is_healthy": true
-    },
-    {
-      "id": "llama-3-3-70b-free",
-      "provider": "openrouter",
-      "name": "Llama 3.3 70B Instruct (Free)",
-      "model": "meta-llama/llama-3.3-70b-instruct:free",
-      "base_url": "https://openrouter.ai/api/v1",
-      "is_vision": false,
-      "is_primary_text": false,
-      "priority": 4,
-      "latency_ms": 44,
-      "is_healthy": false
     },
     {
       "id": "deepseek-r1-free",
@@ -52,7 +40,19 @@
       "is_vision": false,
       "is_primary_text": false,
       "priority": 5,
-      "latency_ms": 46,
+      "latency_ms": 36,
+      "is_healthy": false
+    },
+    {
+      "id": "llama-3-3-70b-free",
+      "provider": "openrouter",
+      "name": "Llama 3.3 70B Instruct (Free)",
+      "model": "meta-llama/llama-3.3-70b-instruct:free",
+      "base_url": "https://openrouter.ai/api/v1",
+      "is_vision": false,
+      "is_primary_text": false,
+      "priority": 4,
+      "latency_ms": 37,
       "is_healthy": false
     }
   ],
@@ -66,7 +66,7 @@
       "is_vision": true,
       "is_primary_text": false,
       "priority": 3,
-      "latency_ms": 48,
+      "latency_ms": 32,
       "is_healthy": false
     },
     {
@@ -78,7 +78,7 @@
       "is_vision": true,
       "is_primary_text": false,
       "priority": 2,
-      "latency_ms": 53,
+      "latency_ms": 44,
       "is_healthy": false
     },
     {
@@ -90,7 +90,7 @@
       "is_vision": true,
       "is_primary_text": false,
       "priority": 6,
-      "latency_ms": 74,
+      "latency_ms": 72,
       "is_healthy": false
     }
   ]
