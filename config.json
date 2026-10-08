@@ -1,7 +1,7 @@
 {
   "version": "2.0.0",
-  "timestamp": 1791369415,
-  "generated_at": "2026-10-07T10:36:55Z",
+  "timestamp": 1791457090,
+  "generated_at": "2026-10-08T10:58:10Z",
   "circuit_breaker": {
     "failure_threshold": 1,
     "cooldown_duration_ms": 60000,
@@ -28,7 +28,7 @@
       "is_vision": false,
       "is_primary_text": true,
       "priority": 1,
-      "latency_ms": 1042,
+      "latency_ms": 907,
       "is_healthy": true
     },
     {
@@ -40,7 +40,7 @@
       "is_vision": false,
       "is_primary_text": false,
       "priority": 5,
-      "latency_ms": 36,
+      "latency_ms": 55,
       "is_healthy": false
     },
     {
@@ -52,11 +52,23 @@
       "is_vision": false,
       "is_primary_text": false,
       "priority": 4,
-      "latency_ms": 55,
+      "latency_ms": 56,
       "is_healthy": false
     }
   ],
   "vision_models": [
+    {
+      "id": "llama-3-2-vision-free",
+      "provider": "openrouter",
+      "name": "Llama 3.2 11B Vision (Free)",
+      "model": "meta-llama/llama-3.2-11b-vision-instruct:free",
+      "base_url": "https://openrouter.ai/api/v1",
+      "is_vision": true,
+      "is_primary_text": false,
+      "priority": 3,
+      "latency_ms": 55,
+      "is_healthy": false
+    },
     {
       "id": "gemini-2-flash-vision-free",
       "provider": "openrouter",
@@ -66,7 +78,7 @@
       "is_vision": true,
       "is_primary_text": false,
       "priority": 2,
-      "latency_ms": 57,
+      "latency_ms": 71,
       "is_healthy": false
     },
     {
@@ -78,19 +90,7 @@
       "is_vision": true,
       "is_primary_text": false,
       "priority": 6,
-      "latency_ms": 60,
-      "is_healthy": false
-    },
-    {
-      "id": "llama-3-2-vision-free",
-      "provider": "openrouter",
-      "name": "Llama 3.2 11B Vision (Free)",
-      "model": "meta-llama/llama-3.2-11b-vision-instruct:free",
-      "base_url": "https://openrouter.ai/api/v1",
-      "is_vision": true,
-      "is_primary_text": false,
-      "priority": 3,
-      "latency_ms": 70,
+      "latency_ms": 82,
       "is_healthy": false
     }
   ]
