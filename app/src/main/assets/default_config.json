@@ -1,7 +1,7 @@
 {
   "version": "2.0.0",
-  "timestamp": 1792486500,
-  "generated_at": "2026-10-20T08:55:00Z",
+  "timestamp": 1792572903,
+  "generated_at": "2026-10-21T08:55:03Z",
   "circuit_breaker": {
     "failure_threshold": 1,
     "cooldown_duration_ms": 60000,
@@ -28,20 +28,8 @@
       "is_vision": false,
       "is_primary_text": true,
       "priority": 1,
-      "latency_ms": 1179,
+      "latency_ms": 4974,
       "is_healthy": true
-    },
-    {
-      "id": "deepseek-r1-free",
-      "provider": "openrouter",
-      "name": "DeepSeek R1 Reasoning (Free)",
-      "model": "deepseek/deepseek-r1:free",
-      "base_url": "https://openrouter.ai/api/v1",
-      "is_vision": false,
-      "is_primary_text": false,
-      "priority": 5,
-      "latency_ms": 34,
-      "is_healthy": false
     },
     {
       "id": "llama-3-3-70b-free",
@@ -52,11 +40,35 @@
       "is_vision": false,
       "is_primary_text": false,
       "priority": 4,
-      "latency_ms": 37,
+      "latency_ms": 60,
+      "is_healthy": false
+    },
+    {
+      "id": "deepseek-r1-free",
+      "provider": "openrouter",
+      "name": "DeepSeek R1 Reasoning (Free)",
+      "model": "deepseek/deepseek-r1:free",
+      "base_url": "https://openrouter.ai/api/v1",
+      "is_vision": false,
+      "is_primary_text": false,
+      "priority": 5,
+      "latency_ms": 67,
       "is_healthy": false
     }
   ],
   "vision_models": [
+    {
+      "id": "gemini-2-flash-vision-free",
+      "provider": "openrouter",
+      "name": "Gemini 2.0 Flash Vision (Free)",
+      "model": "google/gemini-2.0-flash-exp:free",
+      "base_url": "https://openrouter.ai/api/v1",
+      "is_vision": true,
+      "is_primary_text": false,
+      "priority": 2,
+      "latency_ms": 63,
+      "is_healthy": false
+    },
     {
       "id": "llama-3-2-vision-free",
       "provider": "openrouter",
@@ -66,7 +78,7 @@
       "is_vision": true,
       "is_primary_text": false,
       "priority": 3,
-      "latency_ms": 35,
+      "latency_ms": 67,
       "is_healthy": false
     },
     {
@@ -78,19 +90,7 @@
       "is_vision": true,
       "is_primary_text": false,
       "priority": 6,
-      "latency_ms": 39,
-      "is_healthy": false
-    },
-    {
-      "id": "gemini-2-flash-vision-free",
-      "provider": "openrouter",
-      "name": "Gemini 2.0 Flash Vision (Free)",
-      "model": "google/gemini-2.0-flash-exp:free",
-      "base_url": "https://openrouter.ai/api/v1",
-      "is_vision": true,
-      "is_primary_text": false,
-      "priority": 2,
-      "latency_ms": 42,
+      "latency_ms": 79,
       "is_healthy": false
     }
   ]
