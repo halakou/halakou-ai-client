@@ -1,7 +1,7 @@
 {
   "version": "2.0.0",
-  "timestamp": 1792917928,
-  "generated_at": "2026-10-25T08:45:28Z",
+  "timestamp": 1793006681,
+  "generated_at": "2026-10-26T09:24:41Z",
   "circuit_breaker": {
     "failure_threshold": 1,
     "cooldown_duration_ms": 60000,
@@ -28,7 +28,7 @@
       "is_vision": false,
       "is_primary_text": true,
       "priority": 1,
-      "latency_ms": 1068,
+      "latency_ms": 961,
       "is_healthy": true
     },
     {
@@ -40,7 +40,7 @@
       "is_vision": false,
       "is_primary_text": false,
       "priority": 4,
-      "latency_ms": 43,
+      "latency_ms": 56,
       "is_healthy": false
     },
     {
@@ -52,7 +52,7 @@
       "is_vision": false,
       "is_primary_text": false,
       "priority": 5,
-      "latency_ms": 46,
+      "latency_ms": 69,
       "is_healthy": false
     }
   ],
@@ -66,7 +66,7 @@
       "is_vision": true,
       "is_primary_text": false,
       "priority": 3,
-      "latency_ms": 43,
+      "latency_ms": 50,
       "is_healthy": false
     },
     {
@@ -78,7 +78,7 @@
       "is_vision": true,
       "is_primary_text": false,
       "priority": 2,
-      "latency_ms": 69,
+      "latency_ms": 81,
       "is_healthy": false
     },
     {
@@ -90,7 +90,7 @@
       "is_vision": true,
       "is_primary_text": false,
       "priority": 6,
-      "latency_ms": 84,
+      "latency_ms": 82,
       "is_healthy": false
     }
   ]
