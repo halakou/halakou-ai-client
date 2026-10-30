@@ -1,7 +1,7 @@
 {
   "version": "2.0.0",
-  "timestamp": 1793269716,
-  "generated_at": "2026-10-29T10:28:36Z",
+  "timestamp": 1793356185,
+  "generated_at": "2026-10-30T10:29:45Z",
   "circuit_breaker": {
     "failure_threshold": 1,
     "cooldown_duration_ms": 60000,
@@ -28,7 +28,7 @@
       "is_vision": false,
       "is_primary_text": true,
       "priority": 1,
-      "latency_ms": 1174,
+      "latency_ms": 973,
       "is_healthy": true
     },
     {
@@ -40,7 +40,7 @@
       "is_vision": false,
       "is_primary_text": false,
       "priority": 5,
-      "latency_ms": 32,
+      "latency_ms": 56,
       "is_healthy": false
     },
     {
@@ -52,7 +52,7 @@
       "is_vision": false,
       "is_primary_text": false,
       "priority": 4,
-      "latency_ms": 34,
+      "latency_ms": 69,
       "is_healthy": false
     }
   ],
@@ -66,19 +66,7 @@
       "is_vision": true,
       "is_primary_text": false,
       "priority": 3,
-      "latency_ms": 36,
-      "is_healthy": false
-    },
-    {
-      "id": "gemini-direct-public",
-      "provider": "gemini",
-      "name": "Google Gemini 2.5 Flash Direct",
-      "model": "gemini-2.5-flash",
-      "base_url": "https://generativelanguage.googleapis.com",
-      "is_vision": true,
-      "is_primary_text": false,
-      "priority": 6,
-      "latency_ms": 36,
+      "latency_ms": 49,
       "is_healthy": false
     },
     {
@@ -90,7 +78,19 @@
       "is_vision": true,
       "is_primary_text": false,
       "priority": 2,
-      "latency_ms": 38,
+      "latency_ms": 64,
+      "is_healthy": false
+    },
+    {
+      "id": "gemini-direct-public",
+      "provider": "gemini",
+      "name": "Google Gemini 2.5 Flash Direct",
+      "model": "gemini-2.5-flash",
+      "base_url": "https://generativelanguage.googleapis.com",
+      "is_vision": true,
+      "is_primary_text": false,
+      "priority": 6,
+      "latency_ms": 72,
       "is_healthy": false
     }
   ]
